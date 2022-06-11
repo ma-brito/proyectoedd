@@ -1,6 +1,6 @@
 /**
  * Programa para comprobar la jerarquía de clases
- * Pelicula,Disco y String
+ * Pelicula,Disco y Object
  * @author Francisco Manuel Monreal Gamboa
  * @version 1
  */
@@ -12,15 +12,15 @@ import java.io.IOException;
 
 public class UtilidadesS {
 
-	String[] arreglo = new String[0];
+	Object[] arreglo = new Object[0];
 
 	/**
 	  * Metodo para agregar un elemento al arreglo
 	  * @param elemento. elemento que vamos a agregar
 	  * @return Arreglo con el elemento insertado
 	*/
-	public String[] agregarAArregloString(String elemento){
-		String[] nuevo = new String[arreglo.length+1];
+	public Object[] agregarAArregloObject(Object elemento){
+		Object[] nuevo = new Object[arreglo.length+1];
         for(int i=0; i<arreglo.length; i++){
             nuevo[i] = arreglo[i];
         }
@@ -38,7 +38,7 @@ public class UtilidadesS {
 	  * @param ruta_del_archivo. ruta del archivo donde estan guardado los objetos
 	  * @return Arreglo con todos los elementos guardados en el archivo de texto
 	*/
-	public String[] leerObjetosArchivo(String ruta_del_archivo){
+	public Object[] leerObjetosArchivo(String ruta_del_archivo){
 		ObjectInputStream lect = null;
 		/**
 		 * Hacemos un ciclo para poder guardar en nuestro arreglo
@@ -50,7 +50,7 @@ public class UtilidadesS {
 		do{
 			objeto = lect.readObject();
 			if (objeto != null){
-				agregarAArregloString((String) objeto);
+				agregarAArregloObject((Object) objeto);
 			}
 		}while (objeto != null);
 
