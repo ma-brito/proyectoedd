@@ -1,3 +1,4 @@
+import java.util.Random;
 public class Competidor {
   private int habilidad;
   private String clave;
@@ -35,5 +36,23 @@ public class Competidor {
     ps[i]= temporal;
     }
     return ps;
+  }
+
+  public boolean competir (Competidor otro){
+    boolean gano = false;
+    double pA = this.habilidad/(this.habilidad + otro.habilidad);
+    double pB = 1 - pA;
+    double fA= 1/pA;
+    double fB= 1/pB;
+    Random rd = new Random();
+    int value = rd.nextInt(100);
+    if(pA*100>=value){
+      System.out.println(this.clave + " gana a " + otro.clave);
+      return true;
+    }
+    else{
+        System.out.println(this.clave + " pierde a " + otro.clave);
+        return false;
+    }
   }
 }
