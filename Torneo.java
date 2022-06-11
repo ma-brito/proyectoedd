@@ -1,7 +1,10 @@
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Random;
-public class Torneo {
+public class Torneo extends Thread {
      Competidor[] ps;
+     double fA;
+     double fB;
     public void iniciar() {
     
     UtilidadesS uts = new UtilidadesS();
@@ -13,12 +16,15 @@ public class Torneo {
     double d = ps.length;
     int npar = (int) Math.round(d/2);
     }
+
+
     public boolean competir (Competidor primero, Competidor segundo){
-          boolean gano = false;
-          double pA = primero.getHabilidad()/(primero.getHabilidad() + segundo.getHabilidad());
+        // System.out.println(primero.getHabilidad() + " vs " + segundo.getHabilidad());
+        double divisor =(primero.getHabilidad() + segundo.getHabilidad());
+          double pA = (double)primero.getHabilidad()/(divisor);
           double pB = 1 - pA;
-          double fA= 1/pA;
-          double fB= 1/pB;
+          fA= 1/pA;
+          fB= 1/pB;
           Random rd = new Random();
           int value = rd.nextInt(100);
           if(pA*100>=value){
@@ -31,7 +37,41 @@ public class Torneo {
           }
         }
 
-    
-      }
+        @Override
+        public void run(){
+            
+
+            Competidor[] ganadores = new Competidor[ps.length];
+            // for(int i=0; i<ps.length; i++){
+            //     ganadores[i] = ps[i];
+            // }	
+            while(ganadores.length!=1){
+                ganadores = new Competidor[ps.length/2];
+            for(int i=0; i<ps.length/2; i++){
+                Competidor ai=  ps[ps.length-(i+1)];
+                boolean ganador = competir(ps[i], ai);
+                if(ganador){
+                    ganadores[i] = ps[i];
+                }
+                else{
+                    ganadores[i] = ps[ps.length-(i+1)];
+                }
+             
+                }
+                ps = new Competidor[ganadores.length];
+
+
+                for(int j=0; j<ganadores.length; j++){
+                    ps[j] = ganadores[j];
+                    // System.out.println(ganadores[j]);
+                    // System.out.println(ps[j].getClave());
+            }
+            }
+            System.out.println("El ganador es " + ps[0].getClave());
+            
+
+        }
+      
+    }
 
     
