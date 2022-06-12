@@ -4,7 +4,9 @@ public class ClasePrincipal{
         Torneo t = new Torneo();
         t.actual = new Jugador("nan", "io");
         t.actual.setDinero(100);
+        Carrera c = new Carrera();
         t.iniciar();
         t.start();
+        // c.start();
     }
 }

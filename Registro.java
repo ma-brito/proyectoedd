@@ -53,12 +53,14 @@ public class Registro{
     String contrasena = as.nextLine();
     Jugador [] jugadores = ut.leerObjetosArchivo("Jugadores.txt");
     for(int i=0; i<jugadores.length; i++){
-      System.out.println(jugadores[i].getNombre().equals(nombre));
-      System.out.println(jugadores[i].getPassword().equals(contrasena));
       if(jugadores[i].getNombre().equals(nombre) && jugadores[i].getPassword().equals(contrasena)){
         valido = true;
         t.actual= jugadores[i];
         System.out.println("Bienvenido jugador");
+        t.actual.setDinero(100);
+        Carrera c = new Carrera();
+        t.iniciar();
+        t.start();
         break;
       }
     }
@@ -67,8 +69,8 @@ public class Registro{
       }
     
   }while(!valido);
-  t.iniciar();
-  t.start();
+  // t.iniciar();
+  // t.start();
 
 //  for(int i=0; i<ps.length; i++){
 //     System.out.println(ps[i]);

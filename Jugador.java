@@ -6,6 +6,8 @@ public class Jugador implements Serializable{
   private String clave;
   private String password;
   private double dinero;
+  private String Historial;
+  private int contador;
   
 
   public Jugador(String n, String cont){
@@ -42,15 +44,25 @@ public class Jugador implements Serializable{
     }
     else{
       dinero-=m;
+      this.addHistorial("\nApuesta "+ contador+ "\nApostaste "+m+"$");
+      contador++;
+      System.out.println("Apostaste "+m+"$");
       return true;
     }
   }
   
+  public void addHistorial(String h){
+    Historial += h;
+  }
 
+  public String getHistorial(){
+    return Historial;
+  }
 
   public String toString(){
-    return clave + "\nNombre: "+ nombre;
+    return clave + "\nNombre: "+ nombre + "\nDinero: " + dinero;
   }
+
 
   public static double round(double value, int places) {
     if (places < 0) throw new IllegalArgumentException();
@@ -67,6 +79,8 @@ public class Jugador implements Serializable{
     System.out.println("Felicidades obtienes" + no + " de vuelta");
     dinero+=  no;
     System.out.println("Tu saldo es: " + dinero);
+    String g = "\nFelicidades obtuviste " + no + " de vuelta";
+    this.addHistorial(g);
   }
 
 

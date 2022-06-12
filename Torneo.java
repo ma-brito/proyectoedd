@@ -87,17 +87,30 @@ public class Torneo extends Thread {
                         {
                             if( str.equals("") )
                             {
-                                System.out.println( "you input nothing. exit..." );
-
+                                System.out.println( "Se ha acabado el tiempo para paostar. Ya comenzo la carrera" );
+                                System.exit( 0 );
                                 // System.exit( 0 );
                             }
                         }    
                     };
-        timer.schedule( task, 10*500 );
+        timer.schedule( task, 17*1000 );
                     do{
                         valido=true;
                  
-    
+                        System.out.println("Presion 1 para apostar, presiona 2 para ver el historial, presiona 3 para ver el dinero, presiona 4 para salir");
+                        str = in.nextLine();
+                        switch(str){
+                            case "1":
+                            break;
+                            case "2":
+                            System.out.println("Este es tu historial");
+                            System.out.println(actual.getHistorial());
+                            case "3":
+                            System.out.println("Dinero: " + actual.getDinero());
+                            break;
+                            case "4":
+                            System.exit(0);
+                        }
                         System.out.println("***"+ this.psi.getClave() +": con habilidad de "+ this.psi.getHabilidad() + " y cuota decimal de " + fA +  "\nvs\n***" + ai.getClave() +": con habilidad "+ ai.getHabilidad()+ " y cuota decimal de " + fB);
                         System.out.print("Tu saldo actual es: "+ actual.getDinero()  +" pesos.\nPor quien apuestas? (ingresa el numero del jugador): ");
                         apuesta = "jugador"+in.nextLine();
@@ -136,6 +149,7 @@ public class Torneo extends Thread {
                     str= "i";
                     System.out.println("\nApuesta realizada");
                     jugando=true;
+                    notifyAll();
                     try{
                         wait(1000);
                     }catch(InterruptedException e){
@@ -147,7 +161,7 @@ public class Torneo extends Thread {
         }
         @Override
         public void run(){
-            
+            synchronized (this){
             Competidor[] ganadores = new Competidor[ps.length];
             // for(int i=0; i<ps.length; i++){
             //     ganadores[i] = psi;
@@ -175,16 +189,6 @@ public class Torneo extends Thread {
                 // while (!Thread.currentThread().isInterrupted()) {
                 //     try {
                  
-                           
-                            
-                    //     try{
-                    //     wait(1000);
-                    // } catch (InterruptedException ex) {
-                    //     Thread.currentThread().interrupt();
-                    // }
-                
-            
-               
                     Input input = new Input(psi, ai, actual, monto);
                     jugando=false;
                     input.start();
@@ -193,6 +197,16 @@ public class Torneo extends Thread {
                     }catch(InterruptedException e){
                         System.out.println("Error");
                     }
+                            
+                        try{
+                        wait(5000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                
+            
+               
+                   
                 this.apuesta = input.apuesta;
                 this.monto = input.monto;
                 this.jugando = input.jugando;
@@ -203,7 +217,7 @@ public class Torneo extends Thread {
                 //     System.out.println("Error");
                 // }
                 
-                    synchronized (input){
+               
                 
                 boolean ganador = competir(psi, ai, pA);
                         System.out.println("\n");
@@ -228,12 +242,12 @@ public class Torneo extends Thread {
                             }
                         }
                         // notify();
-                    }
-                    try{
-                        Thread.sleep(3000);
-                    }catch(InterruptedException e){
-                        System.out.println("Error");
-                    }
+                    
+                    // try{
+                    //     Thread.sleep(3000);
+                    // }catch(InterruptedException e){
+                    //     System.out.println("Error");
+                    // }
                 
             
                
@@ -266,7 +280,7 @@ public class Torneo extends Thread {
             //     System.out.println("Lo siento, has perdido");
             // }
         }
-
+    }
         }
       
     }
