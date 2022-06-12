@@ -1,11 +1,11 @@
 import java.io.Serializable;
-// import java.text.DecimalFormat;
+import java.text.DecimalFormat;
 public class Jugador implements Serializable{
   private String nombre;
   private int puntos;
   private String clave;
   private String password;
-  private int dinero;
+  private double dinero;
   
 
   public Jugador(String n, String cont){
@@ -32,7 +32,7 @@ public class Jugador implements Serializable{
     return dinero;
   }
 
-  public void setDinero(int d){
+  public void setDinero(double d){
     dinero = d;
   }
   public boolean apostar(double m){
@@ -52,24 +52,20 @@ public class Jugador implements Serializable{
     return clave + "\nNombre: "+ nombre;
   }
 
-//   public static double round(double value, int places) {
-//     if (places < 0) throw new IllegalArgumentException();
+  public static double round(double value, int places) {
+    if (places < 0) throw new IllegalArgumentException();
 
-//     long factor = (long) Math.pow(10, places);
-//     value = value * factor;
-//     long tmp = Math.round(value);
-//     return (double) tmp / factor;
-// }
+    long factor = (long) Math.pow(10, places);
+    value = value * factor;
+    long tmp = Math.round(value);
+    return (double) tmp / factor;
+}
 
   public void Gano(double n){
     
-    // double no = round(n, 2);
-    System.out.println("Felicidades ganaste" + n + "pesos");
-    int no = (int) n;
-    this.dinero =  this.dinero + 10 + no;
-    // System.out.println((int)n);
-    // System.out.println((int)n);
-    // System.out.println(this.dinero);
+    double no = round(n, 2);
+    System.out.println("Felicidades obtienes" + no + " de vuelta");
+    dinero+=  no;
     System.out.println("Tu saldo es: " + dinero);
   }
 

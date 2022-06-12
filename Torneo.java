@@ -5,8 +5,8 @@ import java.util.Random;
 import java.util.Scanner;
 public class Torneo extends Thread {
      Competidor[] ps;
-     double fA;
-     double fB;
+    //  double fA;
+    //  double fB;
      Competidor ganador;
      Competidor apostado;
      Jugador actual;
@@ -23,12 +23,8 @@ public class Torneo extends Thread {
     }
 
 
-    public boolean competir (Competidor primero, Competidor segundo){
-        double divisor =(primero.getHabilidad() + segundo.getHabilidad());
-          double pA = (double)primero.getHabilidad()/(divisor);
-          double pB = 1 - pA;
-          fA= 1/pA;
-          fB= 1/pB;
+    public boolean competir (Competidor primero, Competidor segundo, double pA){
+
           Random rd = new Random();
           int value = rd.nextInt(100);;
           if(pA*100>=value){
@@ -56,12 +52,21 @@ public class Torneo extends Thread {
                 ganadores = new Competidor[ps.length/2];
             for(int i=0; i<ps.length/2; i++){
                 Competidor ai=  ps[ps.length-(i+1)];
-               
+                double divisor =(ps[i].getHabilidad() + ai.getHabilidad());
+                double pA = (double)ps[i].getHabilidad()/(divisor);
+           
+                double pB =(double)ai.getHabilidad()/(divisor);
+         
+                double fA= 1/pA;
+
+                double fB= 1/pB;
                 boolean valido=true;
                 String  apuesta;
                 do{
                     valido=true;
-                    System.out.println(ps[i].getClave() +": con habilidad "+  ps[i].getHabilidad() + " vs " + ai.getClave() +": con habilidad "+ ai.getHabilidad());
+             
+
+                    System.out.println("***"+ ps[i].getClave() +": con habilidad de "+ ps[i].getHabilidad() + " y cuota decimal de " + fA +  "\nvs\n***" + ai.getClave() +": con habilidad "+ ai.getHabilidad()+ " y cuota decimal de " + fB);
                     System.out.print("Tu saldo actual es: "+ actual.getDinero()  +" pesos.\nPor quien apuestas? (ingresa el numero del jugador): ");
                     apuesta = "jugador"+in.nextLine();
                     System.out.println("Apostatse por el "+apuesta);
@@ -74,6 +79,7 @@ public class Torneo extends Thread {
                 double monto=0;
                 do{
                     try{
+                        
                         System.out.println("Ingrese el monto que desea apostar");
                         monto = as.nextDouble();
                         if(monto<=0){
@@ -81,11 +87,11 @@ public class Torneo extends Thread {
                             validob=false;
                         }
                         else{
-                            boolean mont = false;
-                            do{
-                                mont = actual.apostar(monto);
-                             }while(!mont);
-                            validob=true;
+
+                        
+                             boolean mont = actual.apostar(monto);
+                            
+                            validob=mont;
                             // as.next();
                         }
                     }catch(Exception a){
@@ -96,19 +102,25 @@ public class Torneo extends Thread {
                     }
                 }while(!validob);
                
-         
-                boolean ganador = competir(ps[i], ai);
+               
+ 
+                boolean ganador = competir(ps[i], ai, pA);
 
                 if(ganador){
                     if(apuesta.equals(ps[i].getClave())){
-                        
+                        System.out.println(fA*monto);
                         actual.Gano(fA*monto);
+                    }else{
+                        System.out.println("Lo siento, has perdido la apuesta");
                     }
                     ganadores[i] = ps[i];
                 }
                 else{
                     if(apuesta.equals(ai.getClave())){
-                        actual.Gano(fA*monto);
+                        System.out.println(fB*monto);
+                        actual.Gano(fB*monto);
+                    }else{
+                        System.out.println("Lo siento, has perdido la apuesta");
                     }
                     ganadores[i] = ps[ps.length-(i+1)];
                 }
