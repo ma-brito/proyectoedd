@@ -3,12 +3,21 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 public class Torneo extends Thread {
      Competidor[] ps;
     //  double fA;
     //  double fB;
      Competidor ganador;
      Competidor apostado;
+     double fB;
+     double monto;
+     boolean jugando;
+        String apuesta;
+        double fA;
+        double pA;
+        double pB;
      Jugador actual;
     public void iniciar() {
     
@@ -24,7 +33,12 @@ public class Torneo extends Thread {
 
 
     public boolean competir (Competidor primero, Competidor segundo, double pA){
-
+        System.out.println("Empieza la partida...");
+        try{
+            Thread.sleep(5000);
+        }catch(InterruptedException e){
+            System.out.println("Error");
+        }
           Random rd = new Random();
           int value = rd.nextInt(100);;
           if(pA*100>=value){
@@ -36,96 +50,195 @@ public class Torneo extends Thread {
               return false;
           }
         }
+        // public class Mytask extends TimerTask{
+        //     public void run(){
+        //         System.out.println("Hola");
+        //     }
+        // }
+        private String str = "";
+       
+        public class Input extends Thread{
+            boolean valido;
+            int i;
+            Scanner as = new Scanner(System.in);
+            Scanner in = new Scanner(System.in);
+            Competidor ai;
+            Competidor psi;
+            Jugador actual;
+            String apuesta;
+            double monto;
+            boolean jugando;
+            Input (Competidor ps, Competidor ai, Jugador actual, double monto){
+                valido = false;
+                i = 0;
+                this.psi = ps;
+                this.ai = ai;
+                this.actual = actual;
+                
 
+            }
+
+            public void run(){
+                synchronized(this){
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask()
+                    {
+                        public void run()
+                        {
+                            if( str.equals("") )
+                            {
+                                System.out.println( "you input nothing. exit..." );
+
+                                // System.exit( 0 );
+                            }
+                        }    
+                    };
+        timer.schedule( task, 10*500 );
+                    do{
+                        valido=true;
+                 
+    
+                        System.out.println("***"+ this.psi.getClave() +": con habilidad de "+ this.psi.getHabilidad() + " y cuota decimal de " + fA +  "\nvs\n***" + ai.getClave() +": con habilidad "+ ai.getHabilidad()+ " y cuota decimal de " + fB);
+                        System.out.print("Tu saldo actual es: "+ actual.getDinero()  +" pesos.\nPor quien apuestas? (ingresa el numero del jugador): ");
+                        apuesta = "jugador"+in.nextLine();
+                        System.out.println("Apostatse por el "+apuesta);
+                    if(!(apuesta.equals(this.psi.getClave()) || apuesta.equals(ai.getClave()))){
+                        valido=false;
+                        System.out.println("\n**Error, ingrese una clave valida**");
+                    }
+                    }while(!valido);
+                    boolean validob=false;
+                    monto=0;
+                    do{
+                        try{
+                            
+                            System.out.println("Ingrese el monto que desea apostar");
+                            monto = as.nextDouble();
+                            if(monto<=0){
+                                System.out.println("\n**Ingrese un monto valido**");
+                                validob=false;
+                            }
+                            else{
+    
+                            
+                                 boolean mont = actual.apostar(monto);
+                                
+                                validob=mont;
+                                // as.next();
+                            }
+                        }catch(Exception a){
+                            System.out.println("\n**Error, ingrese un monto valido**");
+                            as.next();
+                            validob=false;
+                            
+                        }
+                    }while(!validob);
+                    str= "i";
+                    System.out.println("\nApuesta realizada");
+                    jugando=true;
+                    try{
+                        wait(1000);
+                    }catch(InterruptedException e){
+                        System.out.println("Error");
+                    }
+                }
+                
+            }
+        }
         @Override
         public void run(){
-             Scanner as = new Scanner(System.in);
-             Scanner in = new Scanner(System.in);
+            
             Competidor[] ganadores = new Competidor[ps.length];
             // for(int i=0; i<ps.length; i++){
-            //     ganadores[i] = ps[i];
+            //     ganadores[i] = psi;
             // }	
             int contador=1;
             while(ganadores.length!=1){
+                while(true ){
                 System.out.println("Ronda " + contador);
                 contador++;
                 ganadores = new Competidor[ps.length/2];
-            for(int i=0; i<ps.length/2; i++){
-                Competidor ai=  ps[ps.length-(i+1)];
-                double divisor =(ps[i].getHabilidad() + ai.getHabilidad());
-                double pA = (double)ps[i].getHabilidad()/(divisor);
-           
-                double pB =(double)ai.getHabilidad()/(divisor);
-         
-                double fA= 1/pA;
-
-                double fB= 1/pB;
-                boolean valido=true;
-                String  apuesta;
-                do{
-                    valido=true;
+                while(true){
+                for(int i=0; i<ps.length/2; i++){
+                    
+                    Competidor ai=  ps[ps.length-(i+1)];
+                    Competidor psi= ps[i];
+                    double divisor =(psi.getHabilidad() + ai.getHabilidad());
+                    pA = (double)psi.getHabilidad()/(divisor);
+               
+                    pB =(double)ai.getHabilidad()/(divisor);
              
-
-                    System.out.println("***"+ ps[i].getClave() +": con habilidad de "+ ps[i].getHabilidad() + " y cuota decimal de " + fA +  "\nvs\n***" + ai.getClave() +": con habilidad "+ ai.getHabilidad()+ " y cuota decimal de " + fB);
-                    System.out.print("Tu saldo actual es: "+ actual.getDinero()  +" pesos.\nPor quien apuestas? (ingresa el numero del jugador): ");
-                    apuesta = "jugador"+in.nextLine();
-                    System.out.println("Apostatse por el "+apuesta);
-                if(!(apuesta.equals(ps[i].getClave()) || apuesta.equals(ai.getClave()))){
-                    valido=false;
-                    System.out.println("\n**Error, ingrese una clave valida**");
-                }
-                }while(!valido);
-                boolean validob=false;
-                double monto=0;
-                do{
-                    try{
-                        
-                        System.out.println("Ingrese el monto que desea apostar");
-                        monto = as.nextDouble();
-                        if(monto<=0){
-                            System.out.println("\n**Ingrese un monto valido**");
-                            validob=false;
-                        }
-                        else{
-
-                        
-                             boolean mont = actual.apostar(monto);
+                    fA= 1/pA;
+    
+                    fB= 1/pB;
+                    boolean valido=true;
+                // while (!Thread.currentThread().isInterrupted()) {
+                //     try {
+                 
+                           
                             
-                            validob=mont;
-                            // as.next();
+                    //     try{
+                    //     wait(1000);
+                    // } catch (InterruptedException ex) {
+                    //     Thread.currentThread().interrupt();
+                    // }
+                
+            
+               
+                    Input input = new Input(psi, ai, actual, monto);
+                    jugando=false;
+                    input.start();
+                    try{
+                        input.join();
+                    }catch(InterruptedException e){
+                        System.out.println("Error");
+                    }
+                this.apuesta = input.apuesta;
+                this.monto = input.monto;
+                this.jugando = input.jugando;
+                // this.actual = input.actual;
+                // try{
+                //     Thread.sleep(1000);
+                // }catch(InterruptedException e){
+                //     System.out.println("Error");
+                // }
+                
+                    synchronized (input){
+                
+                boolean ganador = competir(psi, ai, pA);
+                        System.out.println("\n");
+                        if(jugando){
+                            if(ganador){
+                                if(apuesta.equals(psi.getClave())){
+                                    System.out.println(fA*monto);
+                                    actual.Gano(fA*monto);
+                                }else{
+                                    System.out.println("Lo siento, has perdido la apuesta");
+                                }
+                                ganadores[i] = psi;
+                            }
+                            else{
+                                if(apuesta.equals(ai.getClave())){
+                                    System.out.println(fB*monto);
+                                    actual.Gano(fB*monto);
+                                }else{
+                                    System.out.println("Lo siento, has perdido la apuesta");
+                                }
+                                ganadores[i] = ps[ps.length-(i+1)];
+                            }
                         }
-                    }catch(Exception a){
-                        System.out.println("\n**Error, ingrese un monto valido**");
-                        as.next();
-                        validob=false;
-                        
+                        // notify();
                     }
-                }while(!validob);
+                    try{
+                        Thread.sleep(3000);
+                    }catch(InterruptedException e){
+                        System.out.println("Error");
+                    }
+                
+            
                
-               
- 
-                boolean ganador = competir(ps[i], ai, pA);
-
-                if(ganador){
-                    if(apuesta.equals(ps[i].getClave())){
-                        System.out.println(fA*monto);
-                        actual.Gano(fA*monto);
-                    }else{
-                        System.out.println("Lo siento, has perdido la apuesta");
-                    }
-                    ganadores[i] = ps[i];
                 }
-                else{
-                    if(apuesta.equals(ai.getClave())){
-                        System.out.println(fB*monto);
-                        actual.Gano(fB*monto);
-                    }else{
-                        System.out.println("Lo siento, has perdido la apuesta");
-                    }
-                    ganadores[i] = ps[ps.length-(i+1)];
-                }
-             
-                }
+            
                 ps = new Competidor[ganadores.length];
 
 
@@ -133,6 +246,13 @@ public class Torneo extends Thread {
                     ps[j] = ganadores[j];
                     // System.out.println(ganadores[j]);
                     // System.out.println(ps[j].getClave());
+                try{
+                    Thread.sleep(1000);
+                }catch(InterruptedException e){
+                    System.out.println("Error");
+                }
+            }
+               
             }
             }
             // this.ganador = ps[0];
@@ -145,6 +265,7 @@ public class Torneo extends Thread {
             //     System.out.println("El ganador es " + ps[0].getClave());
             //     System.out.println("Lo siento, has perdido");
             // }
+        }
 
         }
       
