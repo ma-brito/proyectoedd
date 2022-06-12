@@ -10,7 +10,7 @@ public class Registro{
     UtilidadesS uts = new UtilidadesS();
     Utilidadesj utr = new Utilidadesj();
 
-
+    Torneo t = new Torneo();
   System.out.println("Bienvenido jugador");
   boolean valido = false;
   do{
@@ -57,6 +57,7 @@ public class Registro{
       System.out.println(jugadores[i].getPassword().equals(contrasena));
       if(jugadores[i].getNombre().equals(nombre) && jugadores[i].getPassword().equals(contrasena)){
         valido = true;
+        t.actual= jugadores[i];
         System.out.println("Bienvenido jugador");
         break;
       }
@@ -66,11 +67,12 @@ public class Registro{
       }
     
   }while(!valido);
+  t.iniciar();
+  t.start();
 
-
- for(int i=0; i<ps.length; i++){
-    System.out.println(ps[i]);
- }
+//  for(int i=0; i<ps.length; i++){
+//     System.out.println(ps[i]);
+//  }
 
     
     //     double d = ps.length;

@@ -1,14 +1,18 @@
 import java.io.Serializable;
+// import java.text.DecimalFormat;
 public class Jugador implements Serializable{
   private String nombre;
   private int puntos;
   private String clave;
   private String password;
+  private int dinero;
+  
 
   public Jugador(String n, String cont){
     nombre = n;
     puntos = 0;
     password = cont;
+    dinero = 0;
 
   }
 
@@ -24,17 +28,51 @@ public class Jugador implements Serializable{
     return ps;
   }
 
+  public double getDinero(){
+    return dinero;
+  }
+
+  public void setDinero(int d){
+    dinero = d;
+  }
+  public boolean apostar(double m){
+    if (dinero<m){
+      System.out.println("No tiene suficiente dinero, ingresa una cantidad válida");
+      return false;
+    }
+    else{
+      dinero-=m;
+      return true;
+    }
+  }
+  
+
 
   public String toString(){
     return clave + "\nNombre: "+ nombre;
   }
 
-  public void Gano(){
-  	this.puntos += 10;
+//   public static double round(double value, int places) {
+//     if (places < 0) throw new IllegalArgumentException();
+
+//     long factor = (long) Math.pow(10, places);
+//     value = value * factor;
+//     long tmp = Math.round(value);
+//     return (double) tmp / factor;
+// }
+
+  public void Gano(double n){
+    
+    // double no = round(n, 2);
+    System.out.println("Felicidades ganaste" + n + "pesos");
+    int no = (int) n;
+    this.dinero =  this.dinero + 10 + no;
+    // System.out.println((int)n);
+    // System.out.println((int)n);
+    // System.out.println(this.dinero);
+    System.out.println("Tu saldo es: " + dinero);
   }
-  public void Empato(){
-    this.puntos += 5;
-  }
+
 
 
 public String getNombre(){
