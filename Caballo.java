@@ -34,7 +34,7 @@ public class Caballo {
             return;
         }
         for (int i = 0; i < 5; i++) {
-            habilidad=+historial[i];
+            habilidad+=historial[i];
         }
     }
 
