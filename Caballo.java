@@ -1,16 +1,12 @@
 
 
 public class Caballo {
-    private int[] historial = new int[5];
-    private double probabilidad, habilidad=0;
+    private int[] historial = {0,0,0,0,0};
+    private double probabilidad, cuota, habilidad=0;
     private String ID;
     
     public Caballo(String ID){
         this.ID=ID;
-        for(int i=0; i<5; i++){
-            historial[i]=0;
-        }
-        
     }
     
 
@@ -43,6 +39,10 @@ public class Caballo {
         probabilidad=(5*7-habilidad)/(5*(6*7/2));
     }
 
+    public void setCuota() {
+        cuota=1/probabilidad;
+    }
+
     public double getHabilidad(){
         return habilidad;
     }
@@ -52,6 +52,6 @@ public class Caballo {
     }
 
     public double getCuota() {
-        return 1/probabilidad;
+        return cuota;
     }
 }

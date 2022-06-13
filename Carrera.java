@@ -2,7 +2,6 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Carrera extends Thread {
-    Caballo[] caballos;
     Lista<Caballo> inscritos,cruzoLinea;
     
     public Carrera() {
