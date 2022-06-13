@@ -6,12 +6,12 @@ public class Caballo {
     private String ID;
     
     public Caballo(String ID){
-        this.ID=ID;
+        setID(ID);
     }
     
 
     public void setHistorial(int a){
-        for (int i=0; i<=4; i++){
+        for (int i=0; i<5; i++){
             if (historial[i] == 0) {
                 historial[i] = a;
                 return;
@@ -23,6 +23,14 @@ public class Caballo {
                 historial[i]=a;
             }
         }
+    }
+
+    public int getLastPlace(){
+        return historial[4];
+    }
+
+    public void setID(String ID){
+        this.ID = ID;
     }
 
     public void setHabilidad(){
@@ -45,6 +53,10 @@ public class Caballo {
 
     public double getHabilidad(){
         return habilidad;
+    }
+    
+    public String getID() {
+        return ID;
     }
 
     public double getProbabilidad() {
