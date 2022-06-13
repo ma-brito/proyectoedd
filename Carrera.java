@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class Carrera extends Thread {
     static Caballo[] caballos;
@@ -88,10 +89,21 @@ public class Carrera extends Thread {
         }
     }
 
+    public String competidores(){
+        String str="";
+        while (iteratorInscritos.hasNext()) {
+            aux = iteratorInscritos.next();
+            str += aux.getID()+"\n";
+        }
+        return str;
+    }
+
     @Override
         public void run(){
+            Scanner entrada = new Scanner(System.in);
             setCaballos();
             int tiempo;
+            String opt,opt2;
             for (tiempo=19; tiempo>=0; tiempo--){
                 if(!CarreraIniciada){
                     if (cruzoLinea!=null){
@@ -106,28 +118,42 @@ public class Carrera extends Thread {
                     if (tiempo==0){
                         CarreraIniciada=true;
                     }
+                    System.out.println("Periodo de apuesta");// Si todavía se puede apostar
+                    System.out.println("Para apostar en la carrera, presiona C");
+                    switch(opt=entrada.next()){
+                        case "c":
+                            System.out.println("I: ver mas información sobre el caballo H: ver historial");
+                            System.out.println("Tiempo restante: " + tiempo + " segundos");
+                            System.out.println("Escoge un Caballo (por número):");
+                            System.out.println(competidores());
+                            switch(opt2=entrada.next()){
+                                case "1":
+                                    
+                                case "2":
+                                case "3":
+                                case "4":
+                                case "5":
+                                case "6":
+                            }
+                            break;
+                        default:
+                            System.out.println("Para apostar en la carrera, presiona C");
+                            break;
+                    }
 
                 } else{
                     System.out.println("Carrera en curso");// Si ya pasó el tiempo
                     System.out.println("Tiempo restante: " + tiempo + " segundos");
-                    while (iteratorInscritos.hasNext()){
-                        aux=iteratorInscritos.next();
-                        System.out.println(aux.getID());
-                    }
                     if (tiempo == 0) {
                         CarreraIniciada = false;
                         updateHistoriales();
                     }
                 }
             }
-
-            //Si el usuario entra al meno de carreras
-            System.out.println("Periodo de apuesta");// Si todavía se puede apostar
-            System.out.println("Para apostar en una carrera, presiona C");
             //Menú expandido
             System.out.println("I: ver mas información sobre el caballo H: ver historial");
             System.out.println("Tiempo restante: "+tiempo+" segundos");
-            System.out.println("Escoge un Caballo:");
+            System.out.println("Escoge un Caballo (por número):");
             //mostrar lista de caballos
             Caballo ganador;
             ganador = ganador();
@@ -151,8 +177,6 @@ public class Carrera extends Thread {
             if (cruzoLinea.pop()== apuesta){
                 System.out.println("ganaste we wuuuuuuuuu");
             }
-
-            System.out.println("Aquí van los puestos");
         }
 
 }
