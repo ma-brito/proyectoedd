@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Carrera extends Thread {
     static Caballo[] caballos;
-    Caballo cApuesta, aux;
+    Caballo cApuesta;
     Lista<Caballo> inscritos,cruzoLinea;
     Jugador jugador;
     IteradorLista<Caballo> iteratorInscritos,iteratorFin;
@@ -13,7 +13,7 @@ public class Carrera extends Thread {
     public Carrera(Jugador jugador) {
         this.jugador=jugador;
         inscritos = new Lista<Caballo>();
-        iteratorInscritos = inscritos.iteradorLista();
+        //iteratorInscritos = inscritos.iteradorLista();
     }
     public void inscribir(Caballo participante){
         inscritos.add(participante);
@@ -30,17 +30,18 @@ public class Carrera extends Thread {
     }
 
     public Caballo ganador(){
+        Caballo aux=null;
         Random aleatorio = new Random();
         double num = aleatorio.nextDouble();
         double prob=0;
-        for(int i=0; i < 7; i++){
-            aux = iteratorInscritos.next();
+        for(int i=0; i < 6; i++){
+            aux = inscritos.getAt(i);
             prob+=aux.getProbabilidad();
             if(num < aux.getProbabilidad()){
                 return aux;
             }
         }
-        return null;
+        return aux;
     }
 
     public void setCaballos() {
@@ -61,7 +62,7 @@ public class Carrera extends Thread {
         }
     }
 
-    public void setHistoriales() {
+    public void setHistorial() {
         Random al = new Random();
         int[] ar = { 1, 2, 3, 4, 5, 6 };
 
@@ -77,21 +78,28 @@ public class Carrera extends Thread {
         }
     }
 
-    public void updateHistoriales(){
+    public void setHistoriales() {
         for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++){
-                iteratorFin = cruzoLinea.iteradorLista();
-                while (iteratorFin.hasNext()) {
-                    aux = iteratorFin.next();
-                    if(caballos[i].getID()==aux.getID())
-                    caballos[i].setHistorial(cruzoLinea.indexOf(aux));
-                }
+            setHistorial();
+        }
+    }
+
+    public void updateHistoriales(){
+        Caballo aux = null;
+        for (int i = 0; i < 6; i++) {
+            iteratorFin = cruzoLinea.iteradorLista();
+            while (iteratorFin.hasNext()) {
+                aux = iteratorFin.next();
+                if (caballos[i].getID() == aux.getID())
+                    caballos[i].setHistorial(cruzoLinea.indexOf(aux)+1);
             }
         }
     }
 
     public String competidores(){
         String str="";
+        Caballo aux = null;
+        iteratorInscritos = inscritos.iteradorLista();
         while (iteratorInscritos.hasNext()) {
             aux = iteratorInscritos.next();
             str += aux.getID()+"\n";
@@ -100,7 +108,9 @@ public class Carrera extends Thread {
     }
 
     public String infoCompetidores() {
+        Caballo aux = null;
         String str = "";
+        iteratorInscritos = inscritos.iteradorLista();
         while (iteratorInscritos.hasNext()) {
             aux = iteratorInscritos.next();
             str += aux.getID() + ". Historial:" + aux.getHistorialStr()+ ". Probabilidad de ganar:"+ aux.getProbabilidad() + ". Cuota:" +aux.getCuota()+ "\n";
@@ -161,32 +171,59 @@ public class Carrera extends Thread {
         cruzoLinea.add(ganador);
         inscritos.delete(ganador);
         Random aleatorio = new Random();
+        System.out.println("el ganador es " + ganador.getID());
         int aux;
-        for (int i = 0; i >= 5; i++) {
-            aux = aleatorio.nextInt(inscritos.size() + 1);
+        for (int i = 4; i >0; i--) {
+            aux = aleatorio.nextInt(i + 1);
             cruzoLinea.add(inscritos.getAt(aux));
-            inscritos.delete(aux);
+            System.out.println(inscritos.getAt(aux).getID() + " terminó la carrera.");
+            inscritos.delete(inscritos.getAt(aux));
         }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
 
-        }
+        cruzoLinea.add(inscritos.getAt(0));
+        System.out.println(inscritos.getAt(0).getID() + " terminó la carrera al final.\n");
+        inscritos.delete(inscritos.getAt(0));
+        iteratorFin = cruzoLinea.iteradorLista();
 
         if (iteratorFin.next() == cApuesta) {
             Double ganancia = apuesta * cApuesta.getCuota();
             jugador.setDinero(jugador.getDinero()+ganancia);
             System.out.println("Ganaste "+ganancia+".");
         }
+
+        for (int i = 0; i < 6; i++) {
+            inscribir(caballos[i]);
+        }
+
+        updateHistoriales();
+
+        for (int i = 0; i < 6; i++) {
+            System.out.println(caballos[i].getID() + " Puesto: " + caballos[i].getLastPlace()+"\n");
+        }
+    }
+
+    public void test(){
+        setCaballos();
+        System.out.println(competidores());
+        System.out.println(infoCompetidores());
+        hacerCarrera();
+        System.out.println(infoCompetidores());
+        
     }
 
     @Override
         public void run(){
+            Caballo aux = null;
             Scanner entrada = new Scanner(System.in);
             setCaballos();
             int tiempo;
             String opt;
             for (tiempo=19; tiempo>=0; tiempo--){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+
+                }
                 if(!CarreraIniciada){
                     if (cruzoLinea!=null){
                         for (int i = 0; i < 6; i++){
@@ -221,10 +258,11 @@ public class Carrera extends Thread {
                     System.out.println("Tiempo restante: " + tiempo + " segundos");
                     if (tiempo == 0) {
                         CarreraIniciada = false;
-                        updateHistoriales();
+                        //updateHistoriales();
                     }
                 }
             }
+            run();
         }
 
 }

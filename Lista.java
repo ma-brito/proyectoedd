@@ -85,7 +85,7 @@ public class Lista<T> implements Collection<T> {
     @Override
     public void add(T elemento){
         if(elemento == null){
-            throw new IllegalArgumentException("El elemento es null");
+            throw new IllegalArgumentException("El elemento es nulo");
         }
         agregaFinal(elemento);
     }
@@ -148,14 +148,14 @@ public class Lista<T> implements Collection<T> {
     }
 
     T getAt(int pos){
-        if (cabeza == null || pos <= 0)
+        if (cabeza == null || pos < 0)
             throw new IllegalArgumentException();
 
         Nodo aux = cabeza;
         for (int i = 1; aux != null && i < pos; i++) {
             aux = aux.siguiente;
         }
-        return (T) aux;
+        return aux.elemento;
     }
 
     /**

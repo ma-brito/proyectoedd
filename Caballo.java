@@ -44,10 +44,10 @@ public class Caballo {
 
     public String getHistorialStr() {
         String str = "";
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             str += historial[i] + ", ";
         }
-        return str + historial[4] + ".";
+        return str + historial[4] ;
     }
 
     public void setProbabilidad() {
