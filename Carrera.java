@@ -117,8 +117,10 @@ public class Carrera extends Thread {
         }
         return str;
     }
-
-    public void menuExtendido(int tiempo) {
+    public class Input extends Thread{
+        Scanner sc;
+        int tiempo;
+    public void run() {
         String opt2;
         Scanner entrada = new Scanner(System.in);
         System.out.println("I: ver mas información sobre los caballos");
@@ -160,10 +162,28 @@ public class Carrera extends Thread {
                 System.out.println(infoCompetidores());
                 break;
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
+}
 
     public void hacerCarrera(){
+        try{
+            Input input = new Input();
+            input.start();
+            input.join();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            Thread.sleep(5*1000);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
         cruzoLinea = new Lista<Caballo>();
         Caballo ganador;
         ganador = ganador();
@@ -246,7 +266,18 @@ public class Carrera extends Thread {
                             System.out.println("Tiempo restante: " + tiempo + " segundos");
                             System.out.println("Escoge un Caballo (por número):");
                             System.out.println(competidores());
-                            menuExtendido(tiempo); 
+                            Input input = new Input();
+                            input.tiempo = tiempo;
+                            try{
+                                // input.start();
+                            Thread.sleep(5000);
+                            }catch(InterruptedException e){
+                                System.out.println("Error");
+                            }
+                            // input.interrupt();
+                            hacerCarrera();
+                          
+                         
                             break;
                         default:
                             System.out.println("Para apostar en la carrera, presiona C");

@@ -5,6 +5,7 @@ public class Registro{
 
           int contador = 1;
     Scanner as = new Scanner(System.in);
+    Scanner in = new Scanner(System.in);
     Jugador [] ps = new Jugador[0];
     Utilidadesj ut = new Utilidadesj();
     UtilidadesS uts = new UtilidadesS();
@@ -56,11 +57,42 @@ public class Registro{
       if(jugadores[i].getNombre().equals(nombre) && jugadores[i].getPassword().equals(contrasena)){
         valido = true;
         t.actual= jugadores[i];
-        System.out.println("Bienvenido jugador");
-        t.actual.setDinero(100);
-        Carrera c = new Carrera(t.actual);
-        t.iniciar();
-        t.start();
+      
+        System.out.println("Bienvenido jugador, cuanto dinero depositaras para esta sesion?");
+        double dinero = as.nextDouble();
+        t.actual.setDinero(dinero);
+        Carrera c = new Carrera(jugadores[i]);
+        c.jugador.setDinero(dinero);
+        System.out.println("Que deseas jugar? \n1Torneo \n2Carrera \n3Salir");
+        String opcion = in.nextLine();
+        boolean validacion = true;
+        do{
+        switch (opcion) {
+          case "1" :
+          while(true){
+            validacion = true;
+            t.iniciar();
+            t.start();
+          }
+          case "2":
+          c.start();
+          validacion = true;
+          break;
+          case "3":
+          System.out.println("Gracias por jugar");
+          validacion = true;
+          System.exit(0);
+          break;
+
+          default:
+          System.out.println("Por favor ingresa una opción valida");
+          validacion = false;
+            break;
+        }
+      }while(!validacion);
+        // t.iniciar();
+        // t.start();
+        // c.start();
         break;
       }
     }
