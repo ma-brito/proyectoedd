@@ -42,6 +42,14 @@ public class Caballo {
         }
     }
 
+    public String getHistorialStr() {
+        String str = "";
+        for (int i = 0; i < 5; i++) {
+            str += historial[i] + ", ";
+        }
+        return str + historial[4] + ".";
+    }
+
     public void setProbabilidad() {
         //Las carreras serán de 6 caballos
         probabilidad=(5*7-habilidad)/(5*(6*7/2));

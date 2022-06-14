@@ -58,7 +58,7 @@ public class Registro{
         t.actual= jugadores[i];
         System.out.println("Bienvenido jugador");
         t.actual.setDinero(100);
-        Carrera c = new Carrera();
+        Carrera c = new Carrera(t.actual);
         t.iniciar();
         t.start();
         break;
