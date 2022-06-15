@@ -69,15 +69,23 @@ public class Registro{
         do{
         switch (opcion) {
           case "1" :
+          validacion = true;
           while(true){
-            validacion = true;
-            t.iniciar();
-            t.start();
+         try{
+          t.iniciar();
+          t.start();
+         }catch(Exception e){
+           System.out.println("");
+         }
+     
           }
           case "2":
-          c.start();
+     
           validacion = true;
-          break;
+          while(true){
+            c.test();
+          }
+
           case "3":
           System.out.println("Gracias por jugar");
           validacion = true;

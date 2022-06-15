@@ -148,8 +148,6 @@ public class Lista<T> implements Collection<T> {
     }
 
     T getAt(int pos){
-        if (cabeza == null || pos < 0)
-            throw new IllegalArgumentException();
 
         Nodo aux = cabeza;
         for (int i = 1; aux != null && i < pos; i++) {

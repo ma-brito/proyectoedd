@@ -94,7 +94,7 @@ public class Torneo extends Thread {
                             }
                         }    
                     };
-        // timer.schedule( task, 15*1000 );
+        timer.schedule( task, 15*1000 );
                     do{
                         valido=true;
                  
