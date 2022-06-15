@@ -42,6 +42,17 @@ public class Caballo {
         }
     }
 
+    public void setHabilidad(int i) {
+        habilidad=i;
+    }
+
+    public void setProbabilidad(int i) {
+        probabilidad = i;
+    }
+    public void setCuota(int i) {
+        cuota = i;
+    }
+
     public String getHistorialStr() {
         String str = "";
         for (int i = 0; i < 4; i++) {

@@ -47,6 +47,9 @@ public class Carrera extends Thread {
         }
 
         for (int i = 0; i < 6; i++) {
+            caballos[i].setHabilidad(0);
+            caballos[i].setProbabilidad(0);
+            caballos[i].setCuota(0);
             caballos[i].setHabilidad();
             caballos[i].setProbabilidad();
             caballos[i].setCuota();
@@ -214,12 +217,9 @@ public class Carrera extends Thread {
         }else{
             System.out.println("Perdiste.");
         }
-
-        for (int i = 0; i < 6; i++) {
-            inscribir(caballos[i]);
-        }
-
+        
         updateHistoriales();
+        setCaballos();
 
         for (int i = 0; i < 6; i++) {
             System.out.println(caballos[i].getID() + " Puesto: " + caballos[i].getLastPlace()+"\n");
