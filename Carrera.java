@@ -1,5 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Carrera extends Thread {
     static Caballo[] caballos;
@@ -17,16 +19,6 @@ public class Carrera extends Thread {
     }
     public void inscribir(Caballo participante){
         inscritos.add(participante);
-    }
-
-    public void SetApuesta(int opcion) {
-        if (opcion>caballos.length)
-            throw new IllegalArgumentException();
-        cApuesta=caballos[opcion-1];
-    }
-
-    public void inscribirJugador(Jugador jugador) {
-        this.jugador = jugador;
     }
 
     public Caballo ganador(){
@@ -118,52 +110,75 @@ public class Carrera extends Thread {
         return str;
     }
 
-    public void menuExtendido(int tiempo) {
-        String opt2;
+    public void menuCarreras() {
+        boolean validoC=false;
+        String str;
         Scanner entrada = new Scanner(System.in);
-        System.out.println("I: ver mas información sobre los caballos");
-        System.out.println("Tiempo restante: " + tiempo + " segundos");
-        System.out.println("Escoge un Caballo (por número):");
-        System.out.println(competidores());
-        switch (opt2 = entrada.next()) {
-            case "1":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta=entrada.nextDouble();
-                cApuesta=caballos[0];
-                break;
-            case "2":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta = entrada.nextDouble();
-                cApuesta = caballos[1];
-                break;
-            case "3":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta = entrada.nextDouble();
-                cApuesta = caballos[2];
-                break;
-            case "4":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta = entrada.nextDouble();
-                cApuesta = caballos[3];
-                break;
-            case "5":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta = entrada.nextDouble();
-                cApuesta = caballos[4];
-                break;
-            case "6":
-                System.out.println("Cuanto quieres apostar?");
-                apuesta = entrada.nextDouble();
-                cApuesta = caballos[5];
-                break;
-            case "I":
-                System.out.println(infoCompetidores());
-                break;
-        }
-
+        System.out.println("Para apostar en la carrera, presiona C");
+        do {
+            switch (str = entrada.next()) {
+                case "c":
+                    System.out.println("i: ver mas información sobre el caballo");
+                    // System.out.println("Tiempo restante: " + tiempo + " segundos");
+                    System.out.println("Escoge un Caballo (por número):");
+                    System.out.println(competidores());
+                    break;
+                case "i":
+                    System.out.println(infoCompetidores());
+                    break;
+                case "1":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[0];
+                    validoC = true;
+                    break;
+                case "2":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[1];
+                    validoC = true;
+                    break;
+                case "3":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[2];
+                    validoC = true;
+                    break;
+                case "4":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[3];
+                    validoC = true;
+                    break;
+                case "5":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[4];
+                    validoC = true;
+                    break;
+                case "6":
+                    System.out.println("Cuanto quieres apostar?");
+                    apuesta = entrada.nextDouble();
+                    cApuesta = caballos[5];
+                    validoC = true;
+                    break;
+                default:
+                    System.out.println("Para apostar en la carrera, presiona C");
+                    break;
+            }
+        } while (!validoC);
     }
 
+    /**
+     * Método que se encarga de obtener el ganador y las posiciones finales de los caballos.
+     */
     public void hacerCarrera(){
+        System.out.println("Empieza la carrera...");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("Error");
+        }
         cruzoLinea = new Lista<Caballo>();
         Caballo ganador;
         ganador = ganador();
@@ -171,13 +186,18 @@ public class Carrera extends Thread {
         cruzoLinea.add(ganador);
         inscritos.delete(ganador);
         Random aleatorio = new Random();
-        System.out.println("el ganador es " + ganador.getID());
+        System.out.println(ganador.getID() + " es el primero en cruzar la linea ");
         int aux;
         for (int i = 4; i >0; i--) {
             aux = aleatorio.nextInt(i + 1);
             cruzoLinea.add(inscritos.getAt(aux));
             System.out.println(inscritos.getAt(aux).getID() + " terminó la carrera.");
             inscritos.delete(inscritos.getAt(aux));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Error");
+            }
         }
 
         cruzoLinea.add(inscritos.getAt(0));
@@ -203,66 +223,15 @@ public class Carrera extends Thread {
     }
 
     public void test(){
-        setCaballos();
-        System.out.println(competidores());
-        System.out.println(infoCompetidores());
-        hacerCarrera();
-        System.out.println(infoCompetidores());
+        setCaballos();//crea un historial desde cero
+        menuCarreras();//únicamente sirve para que el usuario apueste pero la carrera puede correr indepentientemente de si apuesta o no.
+        hacerCarrera();//hace toda la carrera, 5 sleeps de un segundo cada uno.
+        System.out.println(infoCompetidores());//solo para comprobar que se agregó lo de la última carrera
         
     }
 
     @Override
         public void run(){
-            Caballo aux = null;
-            Scanner entrada = new Scanner(System.in);
-            setCaballos();
-            int tiempo;
-            String opt;
-            for (tiempo=19; tiempo>=0; tiempo--){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-
-                }
-                if(!CarreraIniciada){
-                    if (cruzoLinea!=null){
-                        for (int i = 0; i < 6; i++){
-                            System.out.println(caballos[i].getID() + " Puesto: "+caballos[i].getLastPlace());
-                        }
-                        iteratorFin = cruzoLinea.iteradorLista();
-                        while (iteratorFin.hasNext()) {
-                            aux = iteratorFin.next();
-                            System.out.println(aux.getID()+" Puesto: ");
-                        }
-                    }
-                    if (tiempo==0){
-                        CarreraIniciada=true;
-                    }
-                    System.out.println("Periodo de apuesta");// Si todavía se puede apostar
-                    System.out.println("Para apostar en la carrera, presiona C");
-                    switch(opt=entrada.next()){
-                        case "c":
-                            System.out.println("I: ver mas información sobre el caballo H: ver historial");
-                            System.out.println("Tiempo restante: " + tiempo + " segundos");
-                            System.out.println("Escoge un Caballo (por número):");
-                            System.out.println(competidores());
-                            menuExtendido(tiempo); 
-                            break;
-                        default:
-                            System.out.println("Para apostar en la carrera, presiona C");
-                            break;
-                    }
-
-                } else{
-                    System.out.println("Carrera en curso");// Si ya pasó el tiempo
-                    System.out.println("Tiempo restante: " + tiempo + " segundos");
-                    if (tiempo == 0) {
-                        CarreraIniciada = false;
-                        //updateHistoriales();
-                    }
-                }
-            }
-            run();
         }
 
 }
