@@ -46,6 +46,8 @@ public class Carrera extends Thread {
             setHistoriales();
         }
 
+        inscritos.empty();
+
         for (int i = 0; i < 6; i++) {
             caballos[i].setHabilidad(0);
             caballos[i].setProbabilidad(0);
@@ -121,7 +123,7 @@ public class Carrera extends Thread {
         do {
             switch (str = entrada.next()) {
                 case "c":
-                    System.out.println("i: ver mas información sobre el caballo");
+                    System.out.println("i: ver mas información sobre el caballo 0: salir");
                     // System.out.println("Tiempo restante: " + tiempo + " segundos");
                     System.out.println("Escoge un Caballo (por número):");
                     System.out.println(competidores());
@@ -164,6 +166,9 @@ public class Carrera extends Thread {
                     System.out.println("Cuanto quieres apostar?");
                     apuesta = entrada.nextDouble();
                     cApuesta = caballos[5];
+                    validoC = true;
+                    break;
+                case "0":
                     validoC = true;
                     break;
                 default:
@@ -217,6 +222,8 @@ public class Carrera extends Thread {
         }else{
             System.out.println("Perdiste.");
         }
+
+        inscritos.empty();
         
         updateHistoriales();
         setCaballos();
